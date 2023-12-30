@@ -400,6 +400,20 @@ $("#clearSets").click(function () {
 
 });
 
+$("#trash-pok").click(function () {
+	var yes = confirm("Do you wish to delete all your mons from trash?")
+	if (!yes){
+		return
+	}
+	localStorage.removeItem("trash");
+	$(allPokemon("#importedSetsOptions")).hide();
+	loadDefaultLists();
+	for (let zone of document.getElementsByClassName("dropzone")){
+		zone.innerHTML="";
+	}
+
+});
+
 $(allPokemon("#importedSets")).click(function () {
 	var pokeID = $(this).parent().parent().prop("id");
 	var showCustomSets = $(this).prop("checked");
