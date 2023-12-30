@@ -27,6 +27,67 @@ if (!Array.prototype.indexOf) {
 	};
 }
 
+window.document.addEventListener("DOMContentLoaded", function () {
+	const trash = document.getElementById("trash-box");
+	const teambox = document.getElementById("box-poke-list");
+	const teambox2 = document.getElementById("team-poke-list");
+
+	let dragSource = undefined;
+	let dragDestination = undefined;
+	let draggedItem = undefined;
+	let boxes = [trash, teambox, teambox2];
+	for (const element of boxes) {
+		element.addEventListener("dragenter", (e) => {
+			if (e.target == dragDestination) {
+				e.target.style.backgroundColor = " ";
+
+			}
+		});
+		element.addEventListener("dragleave", (e) => {
+			e.target.style.backgroundColor = "transparent"
+		});
+		element.addEventListener("drop", (e) => {
+			e.target.appendChild(draggedItem);
+			//dragSource.removeChild(draggedItem);
+			e.target.style.backgroundColor = "transparent"
+
+			const pokeName = draggedItem.id.substring(0, draggedItem.id.length - 10)
+			const customsets = JSON.parse(window.localStorage.getItem("customsets") ?? "{}");
+			const trashset = JSON.parse(window.localStorage.getItem("trash") ?? "{}");
+
+			if (dragDestination == trash) {
+				const poke = customsets[pokeName];
+				delete customsets[pokeName];
+				trashset[pokeName] = poke;
+			} else {
+				const poke = trashset[pokeName];
+				delete customsets[pokeName];
+				customsets[pokeName] = poke;
+			}
+
+
+			window.localStorage.setItem("customsets", JSON.stringify(customsets));
+			window.localStorage.setItem("trash", JSON.stringify(trashset));
+
+		});
+		element.addEventListener("dragstart", (e) => {
+			draggedItem = e.target;
+			dragSource = e.target.parentElement;
+			dragDestination = boxes.find(b => b != dragSource)
+		});
+		element.addEventListener("dragend", (e) => {
+			draggedItem = undefined;
+		});
+		element.addEventListener("dragover", (e) => {
+			if (e.target == dragDestination) {
+				e.preventDefault();
+
+			}
+		});
+	}
+
+})
+
 function startsWith(string, target) {
 	return (string || '').slice(0, target.length) === target;
 }
@@ -48,20 +109,20 @@ var CALC_STATUS = {
 
 function legacyStatToStat(st) {
 	switch (st) {
-	case 'hp':
-		return "hp";
-	case 'at':
-		return "atk";
-	case 'df':
-		return "def";
-	case 'sa':
-		return "spa";
-	case 'sd':
-		return "spd";
-	case 'sp':
-		return "spe";
-	case 'sl':
-		return "spc";
+		case 'hp':
+			return "hp";
+		case 'at':
+			return "atk";
+		case 'df':
+			return "def";
+		case 'sa':
+			return "spa";
+		case 'sd':
+			return "spd";
+		case 'sp':
+			return "spe";
+		case 'sl':
+			return "spc";
 	}
 }
 
@@ -165,9 +226,9 @@ $(".sl .dvs").keyup(function () {
 
 function getHPDVs(poke) {
 	return (~~poke.find(".at .dvs").val() % 2) * 8 +
-(~~poke.find(".df .dvs").val() % 2) * 4 +
-(~~poke.find(".sp .dvs").val() % 2) * 2 +
-(~~poke.find(gen === 1 ? ".sl .dvs" : ".sa .dvs").val() % 2);
+		(~~poke.find(".df .dvs").val() % 2) * 4 +
+		(~~poke.find(".sp .dvs").val() % 2) * 2 +
+		(~~poke.find(gen === 1 ? ".sl .dvs" : ".sa .dvs").val() % 2);
 }
 
 function calcStats(poke) {
@@ -1011,7 +1072,7 @@ $(".gen").change(function () {
 			params.sort();
 			var path = window.location.pathname + '?' + params;
 			window.history.pushState({}, document.title, path);
-			gtag('config', 'UA-26211653-3', {'page_path': path});
+			gtag('config', 'UA-26211653-3', { 'page_path': path });
 		}
 	}
 	genWasChanged = true;
@@ -1197,9 +1258,9 @@ var stickyMoves = (function () {
 function isPokeInfoGrounded(pokeInfo) {
 	return $("#gravity").prop("checked") || (
 		pokeInfo.find(".type1").val() !== "Flying" &&
-        pokeInfo.find(".type2").val() !== "Flying" &&
-        pokeInfo.find(".ability").val() !== "Levitate" &&
-        pokeInfo.find(".item").val() !== "Air Balloon"
+		pokeInfo.find(".type2").val() !== "Flying" &&
+		pokeInfo.find(".ability").val() !== "Levitate" &&
+		pokeInfo.find(".item").val() !== "Air Balloon"
 	);
 }
 
@@ -1207,53 +1268,53 @@ function getTerrainEffects() {
 	var className = $(this).prop("className");
 	className = className.substring(0, className.indexOf(" "));
 	switch (className) {
-	case "type1":
-	case "type2":
-	case "item":
-		var id = $(this).closest(".poke-info").prop("id");
-		var terrainValue = $("input:checkbox[name='terrain']:checked").val();
-		if (terrainValue === "Electric") {
-			$("#" + id).find("[value='Asleep']").prop("disabled", isPokeInfoGrounded($("#" + id)));
-		} else if (terrainValue === "Misty") {
-			$("#" + id).find(".status").prop("disabled", isPokeInfoGrounded($("#" + id)));
-		}
-		break;
-	case "ability":
-		// with autoset, ability change may cause terrain change, need to consider both sides
-		var terrainValue = $("input:checkbox[name='terrain']:checked").val();
-		if (terrainValue === "Electric") {
-			$("#p1").find(".status").prop("disabled", false);
-			$("#p2").find(".status").prop("disabled", false);
-			$("#p1").find("[value='Asleep']").prop("disabled", isPokeInfoGrounded($("#p1")));
-			$("#p2").find("[value='Asleep']").prop("disabled", isPokeInfoGrounded($("#p2")));
-		} else if (terrainValue === "Misty") {
-			$("#p1").find(".status").prop("disabled", isPokeInfoGrounded($("#p1")));
-			$("#p2").find(".status").prop("disabled", isPokeInfoGrounded($("#p2")));
-		} else {
-			$("#p1").find("[value='Asleep']").prop("disabled", false);
-			$("#p1").find(".status").prop("disabled", false);
-			$("#p2").find("[value='Asleep']").prop("disabled", false);
-			$("#p2").find(".status").prop("disabled", false);
-		}
-		break;
-	default:
-		$("input:checkbox[name='terrain']").not(this).prop("checked", false);
-		if ($(this).prop("checked") && $(this).val() === "Electric") {
-			// need to enable status because it may be disabled by Misty Terrain before.
-			$("#p1").find(".status").prop("disabled", false);
-			$("#p2").find(".status").prop("disabled", false);
-			$("#p1").find("[value='Asleep']").prop("disabled", isPokeInfoGrounded($("#p1")));
-			$("#p2").find("[value='Asleep']").prop("disabled", isPokeInfoGrounded($("#p2")));
-		} else if ($(this).prop("checked") && $(this).val() === "Misty") {
-			$("#p1").find(".status").prop("disabled", isPokeInfoGrounded($("#p1")));
-			$("#p2").find(".status").prop("disabled", isPokeInfoGrounded($("#p2")));
-		} else {
-			$("#p1").find("[value='Asleep']").prop("disabled", false);
-			$("#p1").find(".status").prop("disabled", false);
-			$("#p2").find("[value='Asleep']").prop("disabled", false);
-			$("#p2").find(".status").prop("disabled", false);
-		}
-		break;
+		case "type1":
+		case "type2":
+		case "item":
+			var id = $(this).closest(".poke-info").prop("id");
+			var terrainValue = $("input:checkbox[name='terrain']:checked").val();
+			if (terrainValue === "Electric") {
+				$("#" + id).find("[value='Asleep']").prop("disabled", isPokeInfoGrounded($("#" + id)));
+			} else if (terrainValue === "Misty") {
+				$("#" + id).find(".status").prop("disabled", isPokeInfoGrounded($("#" + id)));
+			}
+			break;
+		case "ability":
+			// with autoset, ability change may cause terrain change, need to consider both sides
+			var terrainValue = $("input:checkbox[name='terrain']:checked").val();
+			if (terrainValue === "Electric") {
+				$("#p1").find(".status").prop("disabled", false);
+				$("#p2").find(".status").prop("disabled", false);
+				$("#p1").find("[value='Asleep']").prop("disabled", isPokeInfoGrounded($("#p1")));
+				$("#p2").find("[value='Asleep']").prop("disabled", isPokeInfoGrounded($("#p2")));
+			} else if (terrainValue === "Misty") {
+				$("#p1").find(".status").prop("disabled", isPokeInfoGrounded($("#p1")));
+				$("#p2").find(".status").prop("disabled", isPokeInfoGrounded($("#p2")));
+			} else {
+				$("#p1").find("[value='Asleep']").prop("disabled", false);
+				$("#p1").find(".status").prop("disabled", false);
+				$("#p2").find("[value='Asleep']").prop("disabled", false);
+				$("#p2").find(".status").prop("disabled", false);
+			}
+			break;
+		default:
+			$("input:checkbox[name='terrain']").not(this).prop("checked", false);
+			if ($(this).prop("checked") && $(this).val() === "Electric") {
+				// need to enable status because it may be disabled by Misty Terrain before.
+				$("#p1").find(".status").prop("disabled", false);
+				$("#p2").find(".status").prop("disabled", false);
+				$("#p1").find("[value='Asleep']").prop("disabled", isPokeInfoGrounded($("#p1")));
+				$("#p2").find("[value='Asleep']").prop("disabled", isPokeInfoGrounded($("#p2")));
+			} else if ($(this).prop("checked") && $(this).val() === "Misty") {
+				$("#p1").find(".status").prop("disabled", isPokeInfoGrounded($("#p1")));
+				$("#p2").find(".status").prop("disabled", isPokeInfoGrounded($("#p2")));
+			} else {
+				$("#p1").find("[value='Asleep']").prop("disabled", false);
+				$("#p1").find(".status").prop("disabled", false);
+				$("#p2").find("[value='Asleep']").prop("disabled", false);
+				$("#p2").find(".status").prop("disabled", false);
+			}
+			break;
 	}
 }
 
@@ -1361,10 +1422,47 @@ function addBoxed(poke, box) {
 	newPoke.src = getSrcImgPokemon(poke);
 	newPoke.dataset.id = `${poke.name} (${poke.nameProp})`
 	newPoke.addEventListener("dragstart", dragstart_handler);
-	if (!box){
+	if (!box) {
 		$('#box-poke-list')[0].appendChild(newPoke)
-	}else{
+	} else {
 		box.append(newPoke)
+	}
+}
+
+function onDragStart(event) {
+	let target = event.target;
+	if (target && target.nodeName == 'IMG') {
+		// Store a ref. on the dragged elem
+		const imgSrc = target.src;
+		parkingSimulation.dragged = target;
+		event.dropEffect = 'linkMove';
+		event.dataTransfer.setData('text/uri-list', imgSrc);
+		event.dataTransfer.setData('text/plain', imgSrc);
+
+		// Make it half transparent
+		event.target.style.opacity = .5;
+	}
+}
+
+function onDragOver(event) {
+	// Prevent default to allow drop
+	event.preventDefault();
+}
+
+function onDrop(event) {
+	const target = validateTarget(event.target);
+	const dragged = parkingSimulation.dragged;
+	if (dragged && target) {
+		const isLink = contains(event.dataTransfer.types, 'text/uri-list');
+		const vehicleType = dragged.alt;
+		target.style.backgroundColor = '';
+		if (isLink && canPark(vehicleType)) {
+			event.preventDefault();
+			// Get the id of the target and add the moved element to the target's DOM
+			dragged.parentNode.removeChild(dragged);
+			dragged.style.opacity = '';
+			target.appendChild(dragged);
+		}
 	}
 }
 
@@ -1382,7 +1480,7 @@ function getSrcImgPokemon(poke) {
 
 function get_trainer_poks(trainer_name) {
 	var true_name = trainer_name.split("(")[1].split("\n")[0].trim()
-	window.CURRENT_TRAINER = true_name.substring(0, true_name.length -1);
+	window.CURRENT_TRAINER = true_name.substring(0, true_name.length - 1);
 	var matches = []
 	for (i in TR_NAMES) {
 		if (TR_NAMES[i].includes(true_name)) {
@@ -1418,7 +1516,7 @@ $(document).on('click', '.left-side', function () {
 //select first mon of the box when loading
 function selectFirstMon() {
 	var pMons = document.getElementsByClassName("trainer-pok left-side")[0];
-	if(!pMons){
+	if (!pMons) {
 		return
 	}
 	let set = pMons.getAttribute("data-id");
@@ -1428,12 +1526,12 @@ function selectFirstMon() {
 }
 
 function selectTrainer(value) {
-	document.getElementById("trainer-pok-list-opposing2").textContent="";
-	document.getElementById("trainer-pok-list-opposing").textContent="";
-	if(value >= 1620){
+	document.getElementById("trainer-pok-list-opposing2").textContent = "";
+	document.getElementById("trainer-pok-list-opposing").textContent = "";
+	if (value >= 1620) {
 		value = 1620;
-	}else if(value<=0){
-		value=1;
+	} else if (value <= 0) {
+		value = 1;
 	}
 	localStorage.setItem("lasttimetrainer", value);
 	all_poks = SETDEX_SS
@@ -1442,7 +1540,7 @@ function selectTrainer(value) {
 		for (i in pok_tr_names) {
 			var index = (poks[pok_tr_names[i]]["index"])
 			if (index == value) {
-				if (window.CURRENT_TRAINER == pok_tr_names[0]){
+				if (window.CURRENT_TRAINER == pok_tr_names[0]) {
 					return false
 				}
 				window.CURRENT_TRAINER = pok_tr_names[0]
@@ -1458,7 +1556,7 @@ function selectTrainer(value) {
 
 function nextTrainer() {
 	if (selectTrainer(nextTrainerId) == false) {
-		if(value >= 1620){
+		if (value >= 1620) {
 			return
 		}
 		nextTrainerId++
@@ -1468,7 +1566,7 @@ function nextTrainer() {
 
 function previousTrainer() {
 	if (selectTrainer(previousTrainerId) == false) {
-		if(value<=0){
+		if (value <= 0) {
 			return
 		}
 		previousTrainerId--
@@ -1476,31 +1574,31 @@ function previousTrainer() {
 	}
 }
 function resetTrainer() {
-	if (confirm(truckMessage())){
+	if (confirm(truckMessage())) {
 		selectTrainer(1);
 		localStorage.removeItem("customsets");
 		$(allPokemon("#importedSetsOptions")).hide();
 		loadDefaultLists();
-		for (let zone of document.getElementsByClassName("dropzone")){
-			zone.innerHTML="";
+		for (let zone of document.getElementsByClassName("dropzone")) {
+			zone.innerHTML = "";
 		}
 	}
-	
+
 }
 
-function truckMessage(){
-	var truckMsgId= Number(localStorage.getItem("truckMsg"));
-	if (truckMsgId == undefined){
+function truckMessage() {
+	var truckMsgId = Number(localStorage.getItem("truckMsg"));
+	if (truckMsgId == undefined) {
 		truckMsgId = -1;
-	} 
-	truckMsgId+=1;
-	if(truckMsgId >= TRUCK_MESSAGES.length){
+	}
+	truckMsgId += 1;
+	if (truckMsgId >= TRUCK_MESSAGES.length) {
 		truckMsgId = 2;
 	}
 	localStorage.setItem("truckMsg", truckMsgId);
 	//yaayy dynamic strings
-	return typeof TRUCK_MESSAGES[truckMsgId] === 'string' ? TRUCK_MESSAGES[truckMsgId] : TRUCK_MESSAGES[truckMsgId]() ;
-	
+	return typeof TRUCK_MESSAGES[truckMsgId] === 'string' ? TRUCK_MESSAGES[truckMsgId] : TRUCK_MESSAGES[truckMsgId]();
+
 }
 
 $(document).ready(function () {
@@ -1527,7 +1625,7 @@ $(document).ready(function () {
 
 
 
-function HideShowCCSettings(){
+function HideShowCCSettings() {
 	$('#show-cc')[0].toggleAttribute("hidden");
 	$('#hide-cc')[0].toggleAttribute("hidden");
 	$('#refr-cc')[0].toggleAttribute("hidden");
@@ -1535,10 +1633,10 @@ function HideShowCCSettings(){
 	$('#cc-sets')[0].toggleAttribute("hidden");
 }
 
-function colorCodeUpdate(){
+function colorCodeUpdate() {
 	var speCheck = document.getElementById("cc-spe-border").checked;
 	var ohkoCheck = document.getElementById("cc-ohko-color").checked;
-	if (!speCheck && !ohkoCheck){
+	if (!speCheck && !ohkoCheck) {
 		return
 	}
 	var pMons = document.getElementsByClassName("trainer-pok left-side");
@@ -1548,31 +1646,31 @@ function colorCodeUpdate(){
 	for (let i = 0; i < pMons.length; i++) {
 		let set = pMons[i].getAttribute("data-id");
 		let idColor = calculationsColors(set, p2);
-		if (speCheck && ohkoCheck){
+		if (speCheck && ohkoCheck) {
 			pMons[i].className = `trainer-pok left-side mon-speed-${idColor.speed} mon-dmg-${idColor.code}`;
 		}
-		else if (speCheck){
+		else if (speCheck) {
 			pMons[i].className = `trainer-pok left-side mon-speed-${idColor.speed}`;
 		}
-		else if (ohkoCheck){
+		else if (ohkoCheck) {
 			pMons[i].className = `trainer-pok left-side mon-dmg-${idColor.code}`;
 		}
-		
-		
+
+
 	}
 }
-function showColorCodes(){
+function showColorCodes() {
 	window.AUTO_REFRESH = document.getElementById("cc-auto-refr").checked;
 	colorCodeUpdate();
 	HideShowCCSettings();
 }
 
-function refreshColorCode(){
+function refreshColorCode() {
 	window.AUTO_REFRESH = document.getElementById("cc-auto-refr").checked;
 	colorCodeUpdate();
 }
 
-function hideColorCodes(){
+function hideColorCodes() {
 	var pMons = document.getElementsByClassName("trainer-pok left-side");
 	for (let i = 0; i < pMons.length; i++) {
 		pMons[i].className = "trainer-pok left-side";
@@ -1581,32 +1679,32 @@ function hideColorCodes(){
 	HideShowCCSettings();
 }
 
-function toggleInfoColorCode(){
+function toggleInfoColorCode() {
 	document.getElementById("info-cc-field").toggleAttribute("hidden");
 }
 
 function TrashPokemon() {
 	var maybeMultiple = document.getElementById("trash-box").getElementsByClassName("trainer-pok");
-	if (maybeMultiple.length == 0){
+	if (maybeMultiple.length == 0) {
 		return; //nothing to delete
 	}
-	var numberPKM = maybeMultiple.length > 1 ? `${maybeMultiple.length} Pokemon(s)` : "this Pokemon"; 
+	var numberPKM = maybeMultiple.length > 1 ? `${maybeMultiple.length} Pokemon(s)` : "this Pokemon";
 	var yes = confirm(`do you really want to remove ${numberPKM}?`);
 	if (!yes) {
 		return;
 	}
 	var customSets = JSON.parse(localStorage.customsets);
-	var length= maybeMultiple.length;
-	for( let i = 0; i<length; i++){
+	var length = maybeMultiple.length;
+	for (let i = 0; i < length; i++) {
 		var pokeTrashed = maybeMultiple[i];
 		var name = pokeTrashed.getAttribute("data-id").split(" (")[0];
 		delete customSets[name];
 	}
-	document.getElementById("trash-box").innerHTML="";
+	document.getElementById("trash-box").innerHTML = "";
 	localStorage.setItem("customsets", JSON.stringify(customSets));
 	$('#box-poke-list')[0].click();
 	//switch to the next pokemon automatically
-	
+
 }
 function RemoveAllPokemon() {
 	document.getEle
@@ -1614,16 +1712,16 @@ function RemoveAllPokemon() {
 
 
 // Check whether control button is pressed
-$(document).keydown(function(event) {
-    if (event.which == "17")
-        cntrlIsPressed = true;
-    else if (event.which == 65 && cntrlIsPressed) {
-        // Cntrl+  A
-        selectAllRows();
-    }
+$(document).keydown(function (event) {
+	if (event.which == "17")
+		cntrlIsPressed = true;
+	else if (event.which == 65 && cntrlIsPressed) {
+		// Cntrl+  A
+		selectAllRows();
+	}
 });
-$(document).keyup(function() {
-    cntrlIsPressed = false;
+$(document).keyup(function () {
+	cntrlIsPressed = false;
 });
 var cntrlIsPressed = false;
 /* dragging for pokemons in boxes*/
@@ -1640,18 +1738,18 @@ function drop(ev) {
 	ev.preventDefault();
 	if (ev.target.classList.contains("dropzone")) {
 		pokeDragged.parentNode.removeChild(pokeDragged);
-		if(ev.target.tagName=="LEGEND"){
+		if (ev.target.tagName == "LEGEND") {
 			ev.target.parentNode.children[1].appendChild(pokeDragged);
-		}else{
+		} else {
 			ev.target.appendChild(pokeDragged);
 		}
-			
+
 	}
 	// if it's a pokemon
-	else if(ev.target.classList.contains("left-side") || ev.target.classList.contains("right-side")) {
-		if (!cntrlIsPressed){
+	else if (ev.target.classList.contains("left-side") || ev.target.classList.contains("right-side")) {
+		if (!cntrlIsPressed) {
 			let prev1 = pokeDragged.previousElementSibling
-			if (!prev1){
+			if (!prev1) {
 				ev.target.after(pokeDragged)
 			} else {
 				ev.target.before(pokeDragged)
@@ -1677,79 +1775,79 @@ function handleDragLeave(ev) {
 /* dragging for the item box, note box*/
 // target elements with the "box-frame-header" class
 interact('.box-frame-header').draggable({
-    inertia: true,
-    modifiers: [
-      interact.modifiers.restrictRect({
-        restriction: document.body,
-        endOnly: true
-      })
-    ],
-    autoScroll: true,
+	inertia: true,
+	modifiers: [
+		interact.modifiers.restrictRect({
+			restriction: document.body,
+			endOnly: true
+		})
+	],
+	autoScroll: true,
 
-    listeners: {
-      // call this function on every dragmove event
-      move: dragMoveListener,
-    }
-  })
+	listeners: {
+		// call this function on every dragmove event
+		move: dragMoveListener,
+	}
+})
 
-function dragMoveListener (event) {
+function dragMoveListener(event) {
 	var target = event.target;
 	var parent = target.parentNode;
 	// special case for the screen box frame
 	if (target.classList.contains("screen-box-frame")) {
 		parent = target;
 	}
-    var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-    var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy ;
-	parent.style.left=x+"px";
-	parent.style.top=y+"px";
-    target.setAttribute('data-x', x);
-    target.setAttribute('data-y', y);
+	var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+	var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+	parent.style.left = x + "px";
+	parent.style.top = y + "px";
+	target.setAttribute('data-x', x);
+	target.setAttribute('data-y', y);
 }
 
 window.dragMoveListener = dragMoveListener
 
-function SpeedBorderSetsChange(ev){
+function SpeedBorderSetsChange(ev) {
 	var monImgs = document.getElementsByClassName("left-side");
-	if (ev.target.checked){
-		for (let monImg of monImgs){
+	if (ev.target.checked) {
+		for (let monImg of monImgs) {
 			monImg.classList.remove("mon-speed-none")
 		}
-	}else{
-		for (let monImg of monImgs){
+	} else {
+		for (let monImg of monImgs) {
 			monImg.classList.add("mon-speed-none")
 		}
 	}
 }
-function widthSpeedBorder(ev){
+function widthSpeedBorder(ev) {
 	document.documentElement.style.setProperty("--spe-bor-width", `${ev.target.value}px`)
 }
 
-function ColorCodeSetsChange(ev){
+function ColorCodeSetsChange(ev) {
 	var monImgs = document.getElementsByClassName("left-side");
-	if (ev.target.checked){
-		for (let monImg of monImgs){
+	if (ev.target.checked) {
+		for (let monImg of monImgs) {
 			monImg.classList.remove("mon-dmg-none")
 		}
-	}else{
-		for (let monImg of monImgs){
+	} else {
+		for (let monImg of monImgs) {
 			monImg.classList.add("mon-dmg-none")
 		}
 	}
 }
-function setupSideCollapsers(){
+function setupSideCollapsers() {
 	var applyF = (btns) => {
 		for (var i = 0; i < btns.length; i++) {
 			let btn = btns[i];
 			btn.cum = btn.offsetHeight;
 			btn.sisterEl = document.getElementsByClassName(btn.getAttribute("data-set"))[0];
-			btn.prevEl = btns[i-1] || null;
-			if (btn.prevEl){
+			btn.prevEl = btns[i - 1] || null;
+			if (btn.prevEl) {
 				btn.cum += btn.prevEl.cum
-			}else{
+			} else {
 				btn.cum = 0;
 			}
-			btn.nextEl = btns[i+1] || null;
+			btn.nextEl = btns[i + 1] || null;
 			btn.onclick = sideCollapsersCorrection
 		}
 	}
@@ -1761,68 +1859,68 @@ function setupSideCollapsers(){
 		readjust the left buttons
 		Because i couldn't find a proper way to do it with css
 	*/
-	for(let btn of leftBtns){
+	for (let btn of leftBtns) {
 		btn.style.left = "-" + btn.offsetWidth + "px";
 	}
 	leftBtns[0].onclick();
 	rigtBtns[0].onclick();
 }
-function sideCollapsersCorrection(ev){
-	if (ev){
+function sideCollapsersCorrection(ev) {
+	if (ev) {
 		var arrow = ev.target.children[0] || ev.target.parentNode.children[0];
 		collapseArrow(arrow);
 	}
 	var node = this;
-	if (node.tagName != "BUTTON"){
+	if (node.tagName != "BUTTON") {
 		node = this.target.parentNode;
 	}
 	var prev = node.prevEl;
 	var offset = node.sisterEl.offsetTop;
 	var relativeHeight = node.parentNode.offsetTop;
-	if(prev){
+	if (prev) {
 		//since the position is absolute, this will prevent from eating fellows.
-		var prevLowPos = prev.offsetTop + prev.offsetHeight; - relativeHeight ;
-		if(offset==0){// collapsed
+		var prevLowPos = prev.offsetTop + prev.offsetHeight; - relativeHeight;
+		if (offset == 0) {// collapsed
 			offset = prevLowPos;
-		}else{// standing
+		} else {// standing
 			offset = offset - relativeHeight;
-			if (offset < prevLowPos){
+			if (offset < prevLowPos) {
 				offset = prevLowPos;
 			}
 		}
-	}else{
-		if(offset==0){// collapsed
+	} else {
+		if (offset == 0) {// collapsed
 			offset = node.offsetTop;
-		}else{// standing
+		} else {// standing
 			offset = offset - relativeHeight;
 		}
 	}
 	node.style.top = offset + "px"
 	//propagate to next buttons
-	if(node.nextEl){
+	if (node.nextEl) {
 		node.nextEl.onclick()
 	}
 }
-function collapseArrow(arrow){
+function collapseArrow(arrow) {
 	var arrBtn = arrow.parentNode;
 	var target = arrBtn.getAttribute("data-set");
-	for (let div of document.getElementsByClassName(target)){
+	for (let div of document.getElementsByClassName(target)) {
 		div.toggleAttribute("hidden");
 	}
-	if (arrBtn.classList.contains("l-side-button")){
-		if (arrow.classList.contains("arrowdown")){
+	if (arrBtn.classList.contains("l-side-button")) {
+		if (arrow.classList.contains("arrowdown")) {
 			arrow.classList.remove("arrowdown");
 			arrow.classList.add("arrowright");
-		}else{
+		} else {
 			arrow.classList.remove("arrowright");
 			arrow.classList.add("arrowdown");
 		}
 	}
-	else if (arrBtn.classList.contains("r-side-button")){
-		if (arrow.classList.contains("arrowdown")){
+	else if (arrBtn.classList.contains("r-side-button")) {
+		if (arrow.classList.contains("arrowdown")) {
 			arrow.classList.remove("arrowdown");
 			arrow.classList.add("arrowleft");
-		}else{
+		} else {
 			arrow.classList.remove("arrowleft");
 			arrow.classList.add("arrowdown");
 		}
@@ -1830,137 +1928,137 @@ function collapseArrow(arrow){
 }
 
 window.isInDoubles = false;
-function switchIconSingle(){
+function switchIconSingle() {
 	document.getElementById("monDouble").removeAttribute("hidden");
 	window.isInDoubles = true;
-	if (+localStorage.getItem("doubleLegacy")){
+	if (+localStorage.getItem("doubleLegacy")) {
 		return;
 	}
 	document.getElementById("trainer-pok-list-opposing2").removeAttribute("hidden");
-	for (toShow of document.getElementsByClassName("for-doubles")){
+	for (toShow of document.getElementsByClassName("for-doubles")) {
 		toShow.removeAttribute("hidden");
 	}
-	
+
 }
 
-function switchIconDouble(){
-	document.getElementById("monDouble").setAttribute("hidden" ,true);
+function switchIconDouble() {
+	document.getElementById("monDouble").setAttribute("hidden", true);
 	window.isInDoubles = false;
-	if (+localStorage.getItem("doubleLegacy")){
+	if (+localStorage.getItem("doubleLegacy")) {
 		return;
 	}
 	var topOppositeBox = document.getElementById("trainer-pok-list-opposing");
 	var bottomOppositeBox = document.getElementById("trainer-pok-list-opposing2");
-	bottomOppositeBox.setAttribute("hidden" ,true);
-	for (toHide of document.getElementsByClassName("for-doubles")){
-		toHide.setAttribute("hidden" ,true);
+	bottomOppositeBox.setAttribute("hidden", true);
+	for (toHide of document.getElementsByClassName("for-doubles")) {
+		toHide.setAttribute("hidden", true);
 	}
 	// set all pokemons that were left in the bottom, replace them onto the top
-	for ( let potentialLeft of bottomOppositeBox.children) {
+	for (let potentialLeft of bottomOppositeBox.children) {
 		topOppositeBox.append(potentialLeft);
 	}
 }
 
-function openCloseItemBox(){
+function openCloseItemBox() {
 	document.getElementById("item-box-frame").toggleAttribute("hidden");
 }
 
-function openCloseNoteBox(){
+function openCloseNoteBox() {
 	document.getElementById("note-box-frame").toggleAttribute("hidden");
 }
 
-function selectItem(ev){
+function selectItem(ev) {
 	var newItem = ev.target.getAttribute("data-id");
-	document.getElementById("itemL1").value=newItem;
+	document.getElementById("itemL1").value = newItem;
 }
 
-function onFirstTime(){
+function onFirstTime() {
 	document.getElementById("team-poke-list").setAttribute("data-placeholder", "You can drag & drop your pokemons here");
-	document.getElementById("box-poke-list2").setAttribute("data-placeholder","You can drag & drop your pokemons here");
+	document.getElementById("box-poke-list2").setAttribute("data-placeholder", "You can drag & drop your pokemons here");
 	document.getElementById("trash-box").setAttribute("data-placeholder", "drop here and click remove to remove");
 }
 
-function sideArrowToggle(){
+function sideArrowToggle() {
 	var btn = document.getElementById("side-arrow-toggle");
-	var onShow= btn.getAttribute("data-id")
-	if (onShow=="true"){
+	var onShow = btn.getAttribute("data-id")
+	if (onShow == "true") {
 		btn.setAttribute("data-id", "false");
-		btn.innerText="Hide Side Arrows";
+		btn.innerText = "Hide Side Arrows";
 		localStorage.setItem("hsidearrow", "1");
-	}else{
+	} else {
 		btn.setAttribute("data-id", "true");
-		btn.innerText="Show Side Arrows";
+		btn.innerText = "Show Side Arrows";
 		localStorage.setItem("hsidearrow", "0");
 	}
-	for(pannel of document.getElementsByClassName("side-pannel")){
+	for (pannel of document.getElementsByClassName("side-pannel")) {
 		pannel.toggleAttribute("hidden")
 	}
 	setupSideCollapsers()
 }
 
-function toggleDoubleLegacyMode(){
-	if (+localStorage.getItem("doubleLegacy")){
+function toggleDoubleLegacyMode() {
+	if (+localStorage.getItem("doubleLegacy")) {
 		localStorage.setItem("doubleLegacy", 0)
-		document.getElementById("double-legacy-mode").innerText="Doubles Modern"
-		if(window.isInDoubles){
+		document.getElementById("double-legacy-mode").innerText = "Doubles Modern"
+		if (window.isInDoubles) {
 			document.getElementById("trainer-pok-list-opposing2").removeAttribute("hidden");
-			for (toShow of document.getElementsByClassName("for-doubles")){
+			for (toShow of document.getElementsByClassName("for-doubles")) {
 				toShow.removeAttribute("hidden");
 			}
 		}
-	}else{
+	} else {
 		localStorage.setItem("doubleLegacy", 1)
-		document.getElementById("double-legacy-mode").innerText="Doubles Legacy"
-		if (window.isInDoubles){
-			document.getElementById("trainer-pok-list-opposing2").setAttribute("hidden" ,true);
-			for (toHide of document.getElementsByClassName("for-doubles")){
-				toHide.setAttribute("hidden" ,true);
+		document.getElementById("double-legacy-mode").innerText = "Doubles Legacy"
+		if (window.isInDoubles) {
+			document.getElementById("trainer-pok-list-opposing2").setAttribute("hidden", true);
+			for (toHide of document.getElementsByClassName("for-doubles")) {
+				toHide.setAttribute("hidden", true);
 			}
 		}
 	}
 }
 
 var screenDivCount = 0;
-function closeScreenCalc(id){
-	var screenDiv = document.getElementById("calc-screen-id"+id);
+function closeScreenCalc(id) {
+	var screenDiv = document.getElementById("calc-screen-id" + id);
 	screenDiv.parentNode.removeChild(screenDiv);
 	screenDivCount--
 }
-function onClickScreenCalc(){
+function onClickScreenCalc() {
 	var screenDiv = document.createElement("div");
 	// box frame header here so it's less code in the end;
 	screenDiv.className = "box-frame screen-box-frame box-frame-header";
-	screenDiv.id = "calc-screen-id"+screenDivCount;
-	screenDiv.dataset.x="500";
-	screenDiv.dataset.y="250";
-	screenDiv.innerHTML=` <div class="screen-box-frame-header"><legend>Calculation ${screenDivCount+1}</legend>
+	screenDiv.id = "calc-screen-id" + screenDivCount;
+	screenDiv.dataset.x = "500";
+	screenDiv.dataset.y = "250";
+	screenDiv.innerHTML = ` <div class="screen-box-frame-header"><legend>Calculation ${screenDivCount + 1}</legend>
 	<div class="close-frame" id="close-calc-box-${screenDivCount}" onclick="closeScreenCalc(${screenDivCount})"><div class="mdiv"><div class="md"></div></div></div></div>`;
 	var moveResults = document.getElementsByClassName("move-result-group");
 	var mainResults = document.getElementsByClassName("main-result-group");
-	for (let i = 0; i<moveResults.length; i++) {
-		if(moveResults[i].parentNode.classList.contains("box-frame")){
+	for (let i = 0; i < moveResults.length; i++) {
+		if (moveResults[i].parentNode.classList.contains("box-frame")) {
 			continue
 		}
-		if(mainResults[i].parentNode.classList.contains("box-frame")){
+		if (mainResults[i].parentNode.classList.contains("box-frame")) {
 			continue
 		}
 		screenDiv.appendChild(moveResults[i].cloneNode(true));
 		screenDiv.appendChild(mainResults[i].cloneNode(true));
 	}
 	document.body.append(screenDiv);
-	for ( let label of document.querySelectorAll('.box-frame label')){
+	for (let label of document.querySelectorAll('.box-frame label')) {
 		label.removeAttribute("for");
 	}
-	for ( let span of document.querySelectorAll('.box-frame span')){
+	for (let span of document.querySelectorAll('.box-frame span')) {
 		span.removeAttribute("id");
 	}
-	for ( let input of document.querySelectorAll('.box-frame input')){
+	for (let input of document.querySelectorAll('.box-frame input')) {
 		input.removeAttribute("id");
 	}
-	for (let group of document.querySelectorAll('.box-frame .move-result-group')){
+	for (let group of document.querySelectorAll('.box-frame .move-result-group')) {
 		group.classList.remove("move-result-group");
 	}
-	for (let group of document.querySelectorAll('.box-frame .main-result-group')){
+	for (let group of document.querySelectorAll('.box-frame .main-result-group')) {
 		group.classList.remove("main-result-group");
 	}
 	screenDivCount++
@@ -1998,8 +2096,8 @@ $(document).ready(function () {
 	$('#cc-spe-border').change(SpeedBorderSetsChange);
 	$('#cc-ohko-color').change(ColorCodeSetsChange);
 	$('#cc-auto-refr').change(refreshColorCode);
-	$('#cc-spe-border')[0].checked=true;
-	$('#cc-ohko-color')[0].checked=true;
+	$('#cc-spe-border')[0].checked = true;
+	$('#cc-ohko-color')[0].checked = true;
 	$('#cc-spe-width').change(widthSpeedBorder);
 	$('#singles-format').click(switchIconDouble);
 	$('#doubles-format').click(switchIconSingle);
@@ -2010,30 +2108,30 @@ $(document).ready(function () {
 	$('#save-change').click(saveTrainerPokemon);
 	$('#double-legacy-mode').click(toggleDoubleLegacyMode);
 	$('#screen-calc').click(onClickScreenCalc)
-	for (let dropzone of document.getElementsByClassName("dropzone")){
-		dropzone.ondragenter=handleDragEnter;
-		dropzone.ondragleave=handleDragLeave;
-		dropzone.ondrop=drop;
-		dropzone.ondragover=allowDrop;
+	for (let dropzone of document.getElementsByClassName("dropzone")) {
+		dropzone.ondragenter = handleDragEnter;
+		dropzone.ondragleave = handleDragLeave;
+		dropzone.ondrop = drop;
+		dropzone.ondragover = allowDrop;
 	}
 	//select last trainer
-	var last = parseInt(localStorage.getItem("lasttimetrainer"),10);
+	var last = parseInt(localStorage.getItem("lasttimetrainer"), 10);
 	if (isNaN(last)) {
 		selectTrainer(1);
-	}else{
+	} else {
 		selectTrainer(last);
 	}
 	//to indicate some features
 	var isNotNew = JSON.parse(localStorage.getItem("isNotNew"))
-	if (!isNotNew){//first time loading the page
+	if (!isNotNew) {//first time loading the page
 		onFirstTime()
 		localStorage.setItem("isNotNew", true)
 	}
-	if (+localStorage.getItem("hsidearrow")){
+	if (+localStorage.getItem("hsidearrow")) {
 		setupSideCollapsers()
 		sideArrowToggle()
 	}
-	if (+localStorage.getItem("doubleLegacy")){
+	if (+localStorage.getItem("doubleLegacy")) {
 		toggleDoubleLegacyMode()
 	}
 
