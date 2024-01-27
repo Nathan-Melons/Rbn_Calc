@@ -499,8 +499,39 @@ function smogonAnalysis(pokemonName) {
 	return "https://smogon.com/dex/" + generation + "/pokemon/" + pokemonName.toLowerCase() + "/";
 }
 
+function sortmons(a, b) {
+	return parseInt(a.split("[")[1].split("]")[0]) - parseInt(b.split("[")[1].split("]")[0])
+}
+
 // auto-update set details on select
 $(".set-selector").change(function () {
+
+	//window.NO_CALC = true;
+	var fullSetName = $(this).val();
+	if ($(this).hasClass('opposing')) {
+		topPokemonIcon(fullSetName, $("#p2mon")[0])
+		CURRENT_TRAINER_POKS = get_trainer_poks(fullSetName)
+		var next_poks = CURRENT_TRAINER_POKS.sort(sortmons)
+
+		var trpok_html = ""
+		for (i in next_poks) {
+			if (next_poks[i][0].includes($('input.opposing').val())) {
+				continue
+			}
+			var pok_name = next_poks[i].split("]")[1].split(" (")[0]
+			if (pok_name == "Zygarde-10%") {
+				pok_name = "Zygarde-10%25"
+			}//this ruined my day
+			var pok = `<img class="trainer-pok right-side" src="https://raw.githubusercontent.com/May8th1995/sprites/master/${pok_name}.png" data-id="${CURRENT_TRAINER_POKS[i].split("]")[1]}" title="${next_poks[i]}, ${next_poks[i]} BP">`
+			trpok_html += pok
+		}
+	} else {
+		topPokemonIcon(fullSetName, $("#p1mon")[0])
+	}
+
+	$('.trainer-pok-list-opposing').html(trpok_html)
+
+
 	var fullSetName = $(this).val();
 	var pokemonName = fullSetName.substring(0, fullSetName.indexOf(" ("));
 	var setName = fullSetName.substring(fullSetName.indexOf("(") + 1, fullSetName.lastIndexOf(")"));
@@ -1054,6 +1085,9 @@ var RANDDEX = [
 	typeof GEN8RANDOMBATTLE === 'undefined' ? {} : GEN8RANDOMBATTLE,
 	typeof GEN9RANDOMBATTLE === 'undefined' ? {} : GEN9RANDOMBATTLE,
 ];
+
+TR_NAMES = get_trainer_names()
+
 var gen, genWasChanged, notation, pokedex, setdex, randdex, typeChart, moves, abilities, items, calcHP, calcStat, GENERATION;
 $(".gen").change(function () {
 	/*eslint-disable */
@@ -1398,7 +1432,7 @@ function loadCustomList(id) {
 }
 
 function get_trainer_names() {
-	var all_poks = SETDEX_SS
+	var all_poks = SETDEX_SM
 	var trainer_names = []
 
 	for (const [pok_name, poks] of Object.entries(all_poks)) {
@@ -1528,22 +1562,22 @@ function selectFirstMon() {
 function selectTrainer(value) {
 	document.getElementById("trainer-pok-list-opposing2").textContent = "";
 	document.getElementById("trainer-pok-list-opposing").textContent = "";
-	if (value >= 1620) {
-		value = 1620;
-	} else if (value <= 0) {
-		value = 1;
-	}
+	// if (value >= 1620) {
+	// 	value = 1620;
+	// } else if (value <= 0) {
+	// 	value = 1;
+	// }
 	localStorage.setItem("lasttimetrainer", value);
-	all_poks = SETDEX_SS
+	all_poks = SETDEX_SM
 	for (const [pok_name, poks] of Object.entries(all_poks)) {
 		var pok_tr_names = Object.keys(poks)
 		for (i in pok_tr_names) {
 			var index = (poks[pok_tr_names[i]]["index"])
 			if (index == value) {
-				if (window.CURRENT_TRAINER == pok_tr_names[0]) {
+				if (window.CURRENT_TRAINER == pok_tr_names[i]) {
 					return false
 				}
-				window.CURRENT_TRAINER = pok_tr_names[0]
+				window.CURRENT_TRAINER = pok_tr_names[i]
 				var set = `${pok_name} (${pok_tr_names[i]})`;
 				$('.opposing').val(set);
 				$('.opposing').change();
