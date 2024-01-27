@@ -21,7 +21,7 @@ var SETDEX_SM = {
 		"Hardy (Rocky) Doubles": {"level": 92,"nature": "Adamant","ability": "Tough Claws","evs": {"hp": 4, "at": 252, "df": 0, "sa": 0, "sd": 4, "sp": 252},"moves": ["Aqua Tail", "Rock Slide", "Rock Smash", "Aerial Ace"]}},
 	"Alakazam": {
 		"Ace of Hearts (Holy)": {"item": "Choice Scarf","level": 60,"nature": "Modest",	"ability": "Magic Guard","evs": {"hp": 85, "at": 85, "df": 85, "sa": 85, "sd": 85, "sp": 85},"moves": ["Psychic", "Signal Beam", "Trick", "Energy Ball"]},
-		"Zel 3 (Factory)": {"item": "Twisted Spoon","level": 74,"nature": "Timid","ability": "Magic Guard","evs": {"hp": 4, "at": 0, "df": 0, "sa": 252, "sd": 0, "sp": 252},"moves": ["Psyshock", "Recover", "Shadow Ball", "Charge Beam"]},
+		"Zel 4 (Factory)": {"item": "Twisted Spoon","level": 74,"nature": "Timid","ability": "Magic Guard","evs": {"hp": 4, "at": 0, "df": 0, "sa": 252, "sd": 0, "sp": 252},"moves": ["Psyshock", "Recover", "Shadow Ball", "Charge Beam"]},
 		"Glass Gauntlet 3:Right (Factory) Doubles": {"item": "Amplifield Rock","level": 82,"nature": "Modest","ability": "Magic Guard","evs": {"hp": 4, "at": 0, "df": 0, "sa": 252, "sd": 0, "sp": 252},"ivs": {"hp": 15, "at": 15, "df": 15, "sa": 15, "sd": 15, "sp": 15},"moves": ["Psychic Terrain", "Psychic", "Calm Mind", "Dazzling Gleam"]},
 		"Eve (Inverse) Doubles": {"item": "Life Orb",	"level": 94,"nature": "Modest",	"ability": "Magic Guard","evs": {"hp": 4, "at": 0, "df": 0, "sa": 252, "sd": 0, "sp": 252},"ivs": {"hp": 10, "at": 10, "df": 10, "sa": 10, "sd": 10, "sp": 10},"moves": ["Psychic", "Shadow Ball", "Grass Knot", "Dazzling Gleam"]},
 		"Spirit Ikaru (Psychic)": {"ability": "Magic Guard", "level": 95,"evs": {"hp": 0, "at": 0, "df": 4, "sa": 252, "sd": 0, "sp": 252},"ivs": {"hp": 31, "at": 31, "df": 31, "sa": 31, "sd": 31, "sp": 31},"moves": ["Psychic", "Focus Blast", "Shadow Ball", "Energy Ball"],"nature": "Modest", "item": "Magical Seed"},
@@ -131,7 +131,7 @@ var SETDEX_SM = {
 			"evs": {"hp": 200, "at": 0, "df": 56, "sa": 252, "sd": 0, "sp": 252},
 			"moves": ["Dazzling Gleam", "Psychic", "Flash Cannon", "Thunder"]},},
 	"Aurorus": {
-		"Zel 3 (Factory)": {
+		"Zel 4 (Factory)": {
 			"item": "Focus Sash",
 			"level": 74,
 			"nature": "Modest",
@@ -1069,7 +1069,7 @@ var SETDEX_SM = {
 			"ability": "Magic Bounce",
 			"evs": {"hp": 55, "at": 55, "df": 55, "sa": 55, "sd": 55, "sp": 55},
 			"moves": ["Morning Sun", "Psychic", "Signal Beam", "Yawn"]},
-		"Zel 3 (Factory)": {
+		"Zel 4 (Factory)": {
 			"item": "Synthetic Seed",
 			"level": 77,
 			"nature": "Modest",
@@ -1518,7 +1518,7 @@ var SETDEX_SM = {
 			"ability": "Snow Cloak",
 			"evs": {"hp": 72, "at": 72, "df": 72, "sa": 72, "sd": 72, "sp": 72},
 			"moves": ["Ice Beam", "Wish", "Signal Beam", "Aurora Veil"]},
-		"Zel 3 (Factory)": {
+		"Zel 4 (Factory)": {
 			"item": "Synthetic Seed",
 			"level": 77,
 			"nature": "Modest",
@@ -2620,7 +2620,7 @@ var SETDEX_SM = {
 			"evs": {"hp": 252, "at": 252, "df": 252, "sa": 252, "sd": 252, "sp": 252},
 			"moves": ["Thunderbolt", "Signal Beam", "Flash Cannon", "HP Water"]}},
 	"Magnezone-Pulse": {
-		"Zel 3 (Factory)": {
+		"Zel 4 (Factory)": {
 			"item": "Wiki Berry",
 			"level": 83,
 			"nature": "Timid",
@@ -4909,7 +4909,7 @@ var SETDEX_SM = {
 			"ability": "Synchronize",
 			"evs": {"hp": 252, "at": 0, "df": 252, "sa": 0, "sd": 4, "sp": 0},
 			"moves": ["Moonlight", "Dark Pulse", "Double Team", "Toxic"]},
-		"Zel 3 (Factory)": {
+		"Zel 4 (Factory)": {
 			"item": "Leftovers",
 			"level": 77,
 			"nature": "Calm",
