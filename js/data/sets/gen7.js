@@ -2077,7 +2077,7 @@ var SETDEX_SM = {
 			"nature": "Jolly",
 			"ability": "Parental Bond",
 			"evs": {"hp": 4, "at": 252, "df": 0, "sa": 0, "sd": 0, "sp": 252}}},
-			"moves": ["Power-Up-Punch", "Earthquake", "Return", "Rock Tomb"]},
+			"moves": ["Power-Up Punch", "Earthquake", "Return", "Rock Tomb"]},
 	"Kingdra": {
 		"Amaria:Zekrom (Water Surface)": {
 			"item": "Dragonium Z",
