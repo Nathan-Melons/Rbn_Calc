@@ -1692,7 +1692,6 @@ var SETDEX_SM = {
 			"nature": "Timid",
 			"ability": "Thick Fat",
 			"evs": {"hp": 252, "at": 252, "df": 252, "sa": 252, "sd": 252, "sp": 252},
-			"ivs": {"hp": 31, "at": 31, "df": 31, "sa": 31, "sd": 31, "sp": 31},
 			"moves": ["Shadow Ball", "Reflect", "Psychic", "Light Screen"]},
 		"Naoman Doubles": {
 			"item": "Light Clay",
@@ -2077,7 +2076,6 @@ var SETDEX_SM = {
 			"nature": "Jolly",
 			"ability": "Parental Bond",
 			"evs": {"hp": 4, "at": 252, "df": 0, "sa": 0, "sd": 0, "sp": 252}}},
-			"moves": ["Power-Up Punch", "Earthquake", "Return", "Rock Tomb"]},
 	"Kingdra": {
 		"Amaria:Zekrom (Water Surface)": {
 			"item": "Dragonium Z",
@@ -2723,7 +2721,7 @@ var SETDEX_SM = {
 			"nature": "Modest",
 			"ability": "Lightning Rod",
 			"evs": {"hp": 252, "at": 252, "df": 252, "sa": 252, "sd": 252, "sp": 252},
-			"ivs": {"hp": 31, "at": 31, "df": 31, "sa": 31, "sd": 31, "sp": 31},
+			"ivs": {"hp": 10, "at": 10, "df": 10, "sa": 10, "sd": 10, "sp": 10},
 			"moves": ["Thunderbolt", "Flamethrower", "Thunder Wave", "HP Ice"]},
 		"Eustace": {"ability": "Lightning Rod", "level": 81, "evs": {"hp": 85, "at": 85, "df": 85, "sa": 85, "sd": 85, "sp": 85}, "ivs": {"hp": 31, "at": 31, "df": 31, "sa": 31, "sd": 31, "sp": 31}, "moves": ["Volt Switch", "Flamethrower", "Thunderbolt", "HP"], "nature": "Timid", "item": "Choice Specs"}},
 	"Manectric-Mega": {
@@ -3314,7 +3312,6 @@ var SETDEX_SM = {
 			"nature": "Modest",
 			"ability": "Tinted Lens",
 			"evs": {"hp": 252, "at": 252, "df": 252, "sa": 252, "sd": 252, "sp": 252},
-			"ivs": {"hp": 31, "at": 31, "df": 31, "sa": 31, "sd": 31, "sp": 31},
 			"moves": ["Moonblast", "Hurricane", "Psychic", "Heat Wave"]}},
 	"Noivern": {
 		"Ciel (Big Top)": {
@@ -4030,7 +4027,6 @@ var SETDEX_SM = {
 			"nature": "Timid",
 			"ability": "Corrosion",
 			"evs": {"hp": 252, "at": 252, "df": 252, "sa": 252, "sd": 252, "sp": 252},
-			"ivs": {"hp": 31, "at": 31, "df": 31, "sa": 31, "sd": 31, "sp": 31},
 			"moves": ["Sludge Bomb", "Flamethrower", "Nasty Plot", "Toxic"]},
 		"Partner Aya (Aster & Eclipse)": {"ability": "Corrosion", "level": 68, "evs": {"hp": 85, "at": 85, "df": 85, "sa": 85, "sd": 85, "sp": 85}, "ivs": {"hp": 31, "at": 31, "df": 31, "sa": 31, "sd": 31, "sp": 31}, "moves": ["Nasty Plot", "Flamethrower", "Sludge Bomb", "Knock Off"], "nature": "Timid",}},
 	"Sandile": {
@@ -5020,7 +5016,6 @@ var SETDEX_SM = {
 			"nature": "Modest",
 			"ability": "Effect Spore",
 			"evs": {"hp": 252, "at": 252, "df": 252, "sa": 252, "sd": 252, "sp": 252},
-			"ivs": {"hp": 31, "at": 31, "df": 31, "sa": 31, "sd": 31, "sp": 31},
 			"moves": ["Sludge Bomb", "Giga Drain", "Sleep Powder", "Moonblast"]}},
 	"Vivillon": {
 		"Bennett (Mirror Arena)": {
