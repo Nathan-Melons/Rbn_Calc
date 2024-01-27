@@ -2722,7 +2722,7 @@ var SETDEX_SM = {
 			"nature": "Modest",
 			"ability": "Lightning Rod",
 			"evs": {"hp": 252, "at": 252, "df": 252, "sa": 252, "sd": 252, "sp": 252},
-			"ivs": {"hp": 10, "at": 10, "df": 10, "sa": 10, "sd": 10, "sp": 10},
+			"ivs": {"hp": 31, "at": 31, "df": 31, "sa": 31, "sd": 31, "sp": 31},
 			"moves": ["Thunderbolt", "Flamethrower", "Thunder Wave", "HP Ice"]},
 		"Eustace": {"ability": "Lightning Rod", "level": 81, "evs": {"hp": 85, "at": 85, "df": 85, "sa": 85, "sd": 85, "sp": 85}, "ivs": {"hp": 31, "at": 31, "df": 31, "sa": 31, "sd": 31, "sp": 31}, "moves": ["Volt Switch", "Flamethrower", "Thunderbolt", "HP"], "nature": "Timid", "item": "Choice Specs"}},
 	"Manectric-Mega": {
