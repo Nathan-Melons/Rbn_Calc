@@ -1511,6 +1511,32 @@ function getSrcImgPokemon(poke) {
 		return `https://raw.githubusercontent.com/May8th1995/sprites/master/${poke.name}.png`
 	}
 }
+	
+function getSrcImgPokemon(poke) {
+	//edge case
+	if (!poke) {
+		return
+	}
+	if (poke.name == "Abra-Pulse") {
+		return `https://raw.githubusercontent.com/May8th1995/sprites/master/Abra.png`
+	} else {
+		return `https://raw.githubusercontent.com/May8th1995/sprites/master/${poke.name}.png`
+	}	
+}
+
+function getSrcImgPokemon(poke) {
+	//edge case
+	if (!poke) {
+		return
+	}
+	if (poke.name == "Tangrowth-Pulse-A") {
+		return `https://raw.githubusercontent.com/May8th1995/sprites/master/Tangrowth.png`
+	} else {
+		return `https://raw.githubusercontent.com/May8th1995/sprites/master/${poke.name}.png`
+	}	
+}
+
+
 
 function get_trainer_poks(trainer_name) {
 	var true_name = trainer_name.split("(")[1].split("\n")[0].trim()
@@ -1560,8 +1586,8 @@ function selectFirstMon() {
 }
 
 function selectTrainer(value) {
-	document.getElementById("trainer-pok-list-opposing2").textContent = "";
-	document.getElementById("trainer-pok-list-opposing").textContent = "";
+	// document.getElementById("trainer-pok-list-opposing2").textContent = "";
+	// document.getElementById("trainer-pok-list-opposing").textContent = "";
 	// if (value >= 1620) {
 	// 	value = 1620;
 	// } else if (value <= 0) {
@@ -1589,35 +1615,29 @@ function selectTrainer(value) {
 }
 
 function nextTrainer() {
-	if (selectTrainer(nextTrainerId) == false) {
-		if (value >= 1620) {
-			return
-		}
-		nextTrainerId++
-		previousTrainer()
-	}
+	string = ($(".trainer-pok-list-opposing")).html()
+	initialSplit = string.split("[")
+	value = parseInt(initialSplit[initialSplit.length - 2].split("]")[0]) + 1
+	selectTrainer(value)
 }
 
 function previousTrainer() {
-	if (selectTrainer(previousTrainerId) == false) {
-		if (value <= 0) {
-			return
-		}
-		previousTrainerId--
-		previousTrainer()
-	}
+	string = ($(".trainer-pok-list-opposing")).html()
+	value = parseInt(string.split("]")[0].split("[")[1]) - 1
+	selectTrainer(value)
 }
+
 function resetTrainer() {
-	if (confirm(truckMessage())) {
+	if (confirm(`Are you sure you want to reset? This will clear all imported sets and change your current trainer back to Younger Calvin. This cannot be undone.`)){
 		selectTrainer(1);
 		localStorage.removeItem("customsets");
 		$(allPokemon("#importedSetsOptions")).hide();
 		loadDefaultLists();
-		for (let zone of document.getElementsByClassName("dropzone")) {
-			zone.innerHTML = "";
+		for (let zone of document.getElementsByClassName("dropzone")){
+			zone.innerHTML="";
 		}
 	}
-
+	
 }
 
 function truckMessage() {
@@ -1808,21 +1828,21 @@ function handleDragLeave(ev) {
 }
 /* dragging for the item box, note box*/
 // target elements with the "box-frame-header" class
-interact('.box-frame-header').draggable({
-	inertia: true,
-	modifiers: [
-		interact.modifiers.restrictRect({
-			restriction: document.body,
-			endOnly: true
-		})
-	],
-	autoScroll: true,
+// interact('.box-frame-header').draggable({
+// 	inertia: true,
+// 	modifiers: [
+// 		interact.modifiers.restrictRect({
+// 			restriction: document.body,
+// 			endOnly: true
+// 		})
+// 	],
+// 	autoScroll: true,
 
-	listeners: {
-		// call this function on every dragmove event
-		move: dragMoveListener,
-	}
-})
+// 	listeners: {
+// 		// call this function on every dragmove event
+// 		move: dragMoveListener,
+// 	}
+// })
 
 function dragMoveListener(event) {
 	var target = event.target;
@@ -2109,7 +2129,7 @@ $(document).ready(function () {
 	$("#singles-format").prop("checked", true);
 	$("#singles-format").change();
 	loadDefaultLists();
-	$(".move-selector").select2({
+	$("select.move-selector").select2({
 		dropdownAutoWidth: true,
 		matcher: function (term, text) {
 			// 2nd condition is for Hidden Power
