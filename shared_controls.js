@@ -2067,7 +2067,7 @@ function onClickScreenCalc() {
 window.AUTO_REFRESH = false;
 $(document).ready(function () {
 	var params = new URLSearchParams(window.location.search);
-	var g = GENERATION[params.get('gen')] || 8;
+	var g = GENERATION[params.get('gen')] || 7;
 	$("#gen" + g).prop("checked", true);
 	$("#gen" + g).change();
 	$("#percentage").prop("checked", true);
